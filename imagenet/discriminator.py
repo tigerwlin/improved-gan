@@ -108,7 +108,7 @@ def discriminator(self, image, reuse=False, y=None, prefix=""):
 
     minibatch_features = [f1, f2]
 
-    x = tf.concat(1, [h] + minibatch_features)
+    x = tf.concat([h] + minibatch_features, 1)  # x = tf.concat(1, [h] + minibatch_features)
     print "x: ", x.get_shape()
     # x = tf.nn.dropout(x, .5)
 

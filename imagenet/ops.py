@@ -109,7 +109,7 @@ def conv_cond_concat(x, y):
     """Concatenate conditioning vector on feature map axis."""
     x_shapes = x.get_shape()
     y_shapes = y.get_shape()
-    return tf.concat(3, [x, y*tf.ones([x_shapes[0], x_shapes[1], x_shapes[2], y_shapes[3]])])
+    return tf.concat([x, y*tf.ones([x_shapes[0], x_shapes[1], x_shapes[2], y_shapes[3]])], 3)   # tf.concat(3, [x, y*tf.ones([x_shapes[0], x_shapes[1], x_shapes[2], y_shapes[3]])])
 
 def conv2d(input_, output_dim,
            k_h=5, k_w=5, d_h=2, d_w=2, stddev=0.02,
@@ -198,7 +198,7 @@ def lrelu(x, leak=0.2, name="lrelu"):
         return f1 * x + f2 * abs(x)
 
 def sin_and_cos(x, name="ignored"):
-    return tf.concat(len(x.get_shape()) - 1, [tf.sin(x), tf.cos(x)])
+    return tf.concat([tf.sin(x), tf.cos(x)], len(x.get_shape()) - 1)    # tf.concat(len(x.get_shape()) - 1, [tf.sin(x), tf.cos(x)])
 
 def maxout(x, k = 2):
     shape = [int(e) for e in x.get_shape()]
@@ -226,7 +226,7 @@ def lrelu_sq(x):
     Concatenates lrelu and square
     """
     dim = len(x.get_shape()) - 1
-    return tf.concat(dim, [lrelu(x), tf.minimum(tf.abs(x), tf.square(x))])
+    return tf.concat([lrelu(x), tf.minimum(tf.abs(x), tf.square(x))], dim)  # tf.concat(dim, [lrelu(x), tf.minimum(tf.abs(x), tf.square(x))])
 
 def linear(input_, output_size, scope=None, mean=0., stddev=0.02, bias_start=0.0, with_w=False):
     shape = input_.get_shape().as_list()
@@ -288,7 +288,7 @@ def avg_grads(tower_grads):
       grads.append(expanded_g)
 
     # Average over the 'tower' dimension.
-    grad = tf.concat(0, grads)
+    grad = tf.concat(grads, 0)    # grad = tf.concat(0, grads)
     grad = tf.reduce_mean(grad, 0)
 
     # Keep in mind that the Variables are redundant because they are shared
@@ -453,7 +453,7 @@ class batch_norm_cross(object):
                 ch1, ch1_mean, ch1_variance, self.beta1, self.gamma1, self.epsilon,
                 scale_after_normalization=True)
 
-            out = tf.concat(3, [ch0, ch1])
+            out = tf.concat([ch0, ch1], 3)  # out = tf.concat(3, [ch0, ch1])
 
             if needs_reshape:
                 out = tf.reshape(out, orig_shape)

@@ -21,20 +21,20 @@ def _bytes_feature(value):
     return tf.train.Feature(bytes_list=tf.train.BytesList(value=[value]))
 
 def main(argv):
-    pattern = "/home/ian/imagenet/ILSVRC2012_img_train_t1_t2/n*/*JPEG"
+    pattern = "/home/wulin/improved-gan/tiny-imagenet-200/train/n*/images/*JPEG"
     files = glob(pattern)
     assert len(files) > 0
-    assert len(files) > 1000000, len(files)
+    assert len(files) > 10000, len(files)
     shuffle(files)
 
-    dirs = glob("/home/ian/imagenet/ILSVRC2012_img_train_t1_t2/n*")
-    assert len(dirs) == 1000, len(dirs)
+    dirs = glob("/home/wulin/improved-gan/tiny-imagenet-200/train/n*")
+    # assert len(dirs) == 1000, len(dirs)
     dirs = [d.split('/')[-1] for d in dirs]
     dirs = sorted(dirs)
     str_to_int = dict(zip(dirs, range(len(dirs))))
 
 
-    outfile = '/media/NAS_SHARED/imagenet/imagenet_train_labeled_' + str(IMSIZE) + '.tfrecords'
+    outfile = '/home/wulin/improved-gan/imagenet/imagenet_train_labeled_' + str(IMSIZE) + '.tfrecords'
     writer = tf.python_io.TFRecordWriter(outfile)
 
     for i, f in enumerate(files):
@@ -49,7 +49,7 @@ def main(argv):
         # from pylearn2.utils.image import save
         # save('foo.png', (image + 1.) / 2.)
         image_raw = image.tostring()
-        class_str = f.split('/')[-2]
+        class_str = f.split('/')[-3]
         label = str_to_int[class_str]
         if i % 1 == 0:
             print i, '\t',label

@@ -354,7 +354,7 @@ def sigmoid_kl_with_logits(logits, targets):
         entropy = 0.
     else:
         entropy = - targets * np.log(targets) - (1. - targets) * np.log(1. - targets)
-    return tf.nn.sigmoid_cross_entropy_with_logits(logits, tf.ones_like(logits) * targets) - entropy
+    return tf.nn.sigmoid_cross_entropy_with_logits(labels=tf.ones_like(logits) * targets, logits=logits) - entropy    # tf.nn.sigmoid_cross_entropy_with_logits(logits, tf.ones_like(logits) * targets) - entropy
 
 class VBNL(object):
     """
